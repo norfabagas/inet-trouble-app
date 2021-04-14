@@ -10,17 +10,53 @@
 
 {% block content %}
 
-{% if category: %}
-<h2>
-    Category: <span class="badge badge-secondary">{{ category }}</span>
-</h2>
+{% if internet_trouble %}
+<h5>Here are summary of your report:</h5>
+<table class="table table-hover">
+    <tr>
+        <td>ID</td>
+        <td>{{ internet_trouble['id'] }}</td>
+    </tr>
+    <tr>
+        <td>Trouble</td>
+        <td>{{ internet_trouble['trouble'] }}</td>
+    </tr>
+    <tr>
+        <td>Status</td>
+        <td>{{ internet_trouble['status'] }}</td>
+    </tr>
+    <tr>
+        <td>Category</td>
+        <td>{{ internet_trouble['category'] }}</td>
+    </tr>
+</table>
+
+<hr/>
+<h5>
+    Check other report:
+</h5>
 {% else %}
 <h2>
-    Type in some string! 
+    Check your trouble report here
 </h2>
 {% endif %}
 
+{% if not category %}
 <form method="POST" action="/">
-    <input type="text" max="255" name="text" class="form-control" placeholder="type some words...">
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="form-control" placeholder="Input Email Address" value="{{ email }}">
+    </div>
+    
+    <div class="form-group">
+        <label for="text">Trouble Identifier Number</label>
+        <input type="number" name="trouble_id" class="form-control" placeholder="Your trouble ID" value="{{ trouble_id }}">
+    </div>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="View">
+    </div>
 </form>
+{% endif %}
+
 {% endblock %}

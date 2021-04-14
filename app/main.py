@@ -3,10 +3,11 @@ from werkzeug.wrappers import Request
 from dotenv import load_dotenv
 import os, requests, json, jwt
 from .middleware import Middleware
-from app.modules.token import *
-from app.modules.session import *
-from app.modules.helper import *
-from app.modules.api_urls import *
+from app.modules.token import generate_authorization_header
+from app.modules.session import generate_auth_session, is_session_valid
+from app.modules.helper import is_duplicate, get_current_unix_time, hour_to_second, get_request_header, dict_contains_null, transform_error_message
+from app.modules.api_urls import api_urls
+from app.modules.ml_api_urls import ml_api_urls
 
 # Booted up before flask app
 load_dotenv()
@@ -29,6 +30,7 @@ def before_request():
     root = request.url_root
     
     excluded_path = [
+        root,
         root + 'login',
         root + 'register'
     ]
@@ -47,22 +49,41 @@ def before_request():
             flash('You need to login first', 'info')
             return redirect(url_for('login_view'))
 
-# @app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def home_view():
     if request.method == 'GET':
         return render_template("home.html")
     if request.method == 'POST':
-        text = request.form['text']
-        category = "NN"
-        lowered = text.lower()
-        if "internet" in lowered:
-            category = "INTERNET"
-        elif "tv" in lowered:
-            category = "IPTV"
-        elif "voice" in lowered:
-            category = "VOICE"
-        
-        return render_template("home.html", category=category)
+        body = {
+            'email': request.form['email'],
+            'trouble_id': request.form['trouble_id']
+        }
+
+        if dict_contains_null(body):
+            flash("Please give us complete information", "danger")
+            return render_template("home.html",
+                email=body['email'],
+                trouble_id=body['trouble_id']
+            )
+
+        response = requests.post(api_urls("post_v1_internet_troubles"), headers=get_request_header(), json=body)
+        print(response.json())
+
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+            internet_trouble = data['internet_trouble']
+            flash("Your report information", "success")
+            return render_template("home.html",
+                internet_trouble=internet_trouble
+            )
+        else:
+            flash("Report not found", "warning")
+            return render_template(
+                "home.html",
+                email=body['email'],
+                trouble_id=body['trouble_id']
+            )
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_view():
@@ -131,8 +152,7 @@ def register_view():
             "password_confirmation": request.form["password_confirmation"]
         }
 
-        form_valid = validates_null_in_dict(body)
-        if not form_valid:
+        if dict_contains_null(body):
             flash("Please fill out all field", "danger")
             return render_template(
                 "register.html",

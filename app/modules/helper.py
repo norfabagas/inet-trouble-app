@@ -17,11 +17,11 @@ def get_request_header():
         "Content-Type": "application/json"
     }
 
-def validates_null_in_dict(dict: dict) -> bool:
+def dict_contains_null(dict: dict) -> bool:
     if "" in dict:
-        return False
-    else:
         return True
+    else:
+        return False
 
 def transform_error_message(error: dict) -> str:
     error_key = list(error)[0].capitalize()
