@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+{% if category: %}
+<h2>
+    Category: <span class="badge badge-secondary">{{ category }}</span>
+</h2>
+{% else %}
+<h2>
+    Type in some string! 
+</h2>
+{% endif %}
+
+<form method="POST" action="/">
+    <input type="text" max="255" name="text" class="form-control" placeholder="type some words...">
+</form>
+{% endblock %}

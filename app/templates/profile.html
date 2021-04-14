@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<h3>
+  <span class="badge badge-secondary">Hello</span> 
+  {{ session.get(request.cookies.get('auth'))['name'] }}
+</h3>
+<hr>
+
+<h5>Here are summary of your account:</h5>
+<table class="table table-hover">
+  <tr>
+    <td>Public ID</td>
+    <td>s</td>
+  </tr>
+</table>
+{% endblock %}
