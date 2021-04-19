@@ -8,7 +8,8 @@ def bearer_token(token: str) -> str:
 
 def authorization_header(token: str) -> dict:
     headers = {
-        'Authorization': bearer_token(token)
+        'Authorization': bearer_token(token),
+        'Content-Type': 'application/json'
     }
 
     return headers

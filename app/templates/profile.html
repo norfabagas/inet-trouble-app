@@ -19,7 +19,78 @@ Profile
 <table class="table table-hover">
   <tr>
     <td>Reports Submitted</td>
-    <td>data['total_size']</td>
+    <td>{{ data['total_size'] }}</td>
   </tr>
+  <tr>
+    <td>Reports Page</td>
+    <td>{{ data['page'] }}</td>
+  </tr>
+  <tr>
+    <td>Reports Total Page</td>
+    <td>{{ data['total_page'] }}</td>
+  </tr>
+</table>
+
+<hr/>
+
+<a class="btn btn-info" href="{{ url_for('add_view') }}">
+  Add report
+</a>
+
+<hr/>
+
+<form method="GET" class="form-inline mb-2">
+  
+  <div class="form-group mr-2">
+    <label for="type" class="mr-1">Report type</label>
+    <select name="type" class="form-control">
+      <option value="all" {{ 'selected' if type == 'all' else '' }}>All</option>
+      <option value="read" {{ 'selected' if type == 'read' else '' }}>Read</option>
+      <option value="unread" {{ 'selected' if type == 'unread' else '' }}>Unread</option>
+    </select>
+  </div>
+
+  <div class="form-group mr-2">
+    <label for="size" class="mr-1">Show per page</label>
+    <select name="size" class="form-control">
+      <option value="5" {{ 'selected' if size == '5' else '' }}>5</option>
+      <option value="10" {{ 'selected' if size == '10' else '' }}>10</option>
+      <option value="15" {{ 'selected' if size == '15' else '' }}>15</option>
+    </select>
+  </div>
+
+  <div class="form-group mr-2">
+    <label for="size" class="mr-1">Page</label>
+    <select name="page" class="form-control">
+      {% for i in range(1, data['total_page'] + 1) %}
+      <option value="{{ i }}" {{ 'selected' if i == data['page'] else '' }}>{{ i }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-info" value="Filter"/>
+  </div>
+</form>
+
+<table class="table table-hover">
+  <tr>
+    <th>#</th>
+    <th>ID</th>
+    <th>Trouble</th>
+    <th>Status</th>
+    <th>Category</th>
+    <th>Predicted from ML</th>
+  </tr>
+  {% for key, val in reports %}
+  <tr>
+    <td>{{ key + 1 }}</td>
+    <td>{{ val['id'] }}</td>
+    <td>{{ val['trouble'] }}</td>
+    <td>{{ val['status'] }}</td>
+    <td>{{ val['category'] }}</td>
+    <td>{{ val['is_predicted'] }}</td>
+  </tr>
+  {% endfor %}
 </table>
 {% endblock %}

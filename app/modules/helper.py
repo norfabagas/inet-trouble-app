@@ -31,3 +31,9 @@ def transform_error_message(error: dict) -> str:
 
 def get_first_name(name: str) -> str:
     return name.split()[0]
+
+def default_value(val, default):
+    if val == None:
+        return default
+    else:
+        return val

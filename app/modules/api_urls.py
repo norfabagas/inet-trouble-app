@@ -22,5 +22,7 @@ def api_urls(key: str) -> str:
         return v1_private + internet_troubles
     elif key == "post_v1_internet_troubles":
         return v1_public + internet_troubles
+    elif key == "post_v1_private_internet_troubles":
+        return v1_private + internet_troubles
     else:
         return ""

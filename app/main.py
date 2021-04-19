@@ -5,7 +5,7 @@ import os, requests, json, jwt
 from .middleware import Middleware
 from app.modules.token import generate_authorization_header
 from app.modules.session import generate_auth_session, is_session_valid
-from app.modules.helper import is_duplicate, get_current_unix_time, hour_to_second, get_request_header, dict_contains_null, transform_error_message
+from app.modules.helper import is_duplicate, get_current_unix_time, hour_to_second, get_request_header, dict_contains_null, transform_error_message, default_value
 from app.modules.api_urls import api_urls
 from app.modules.ml_api_urls import ml_api_urls
 
@@ -188,10 +188,58 @@ def register_view():
 
 @app.route("/profile", methods=['GET'])
 def profile_view():
-    response = requests.get(api_urls('get_v1_private_internet_troubles_index'), headers=generate_authorization_header())
+    # read requests
+    type = default_value(request.args.get('type'), 'all')
+    page = default_value(request.args.get('page'), 1)
+    size = default_value(request.args.get('size'), 5)
+
+    built_url = api_urls('get_v1_private_internet_troubles_index') + "?type=" + type + "&page=" + str(page) + "&size=" + str(size)
+
+    response = requests.get(
+        built_url,
+        headers=generate_authorization_header()
+    )
     if response.status_code == 200:
         data = response.json()
 
-        return render_template("profile.html", data=data)
+        return render_template(
+            "profile.html", 
+            data=data,
+            type=type,
+            page=page,
+            size=size,
+            reports=enumerate(data['internet_troubles'])
+        )
     else:
         return render_template("500.html", message="Error on fetching data")
+
+@app.route("/add", methods=['GET', 'POST'])
+def add_view():
+    if request.method == 'GET':
+        return render_template("add.html")
+    else:
+        body = {
+            'trouble': request.form['trouble']
+        }
+
+        if dict_contains_null(body):
+            flash("Please fill out all field", "danger")
+            return render_template("add.html")
+
+        ml_resp = requests.get(ml_api_urls("get_classify") + "?text=" + body['trouble'], headers=get_request_header())
+        
+        if ml_resp.status_code == 200:
+            category = ml_resp.json()['prediction']
+            
+            # store data to api
+            body['category'] = category
+            body['status'] = "PENDING"
+            body['is_predicted'] = True
+            response = requests.post(api_urls("post_v1_private_internet_troubles"), headers=generate_authorization_header(), json=body)
+            if response.status_code == 201:
+                flash("Created new report with category : " + category, "success")
+                return redirect(url_for('profile_view'))
+            else:
+                return render_template("500.html", message="Error on storing data to API")
+        else:
+            return render_template("500.html", message="Error on fetching ML API")
