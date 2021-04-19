@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session, make_response, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, make_response, flash, abort
 from werkzeug.wrappers import Request
 from dotenv import load_dotenv
 import os, requests, json, jwt
@@ -243,3 +243,33 @@ def add_view():
                 return render_template("500.html", message="Error on storing data to API")
         else:
             return render_template("500.html", message="Error on fetching ML API")
+
+@app.route("/reports", methods=['GET'])
+def reports_view():
+    if session.get(request.cookies.get('auth'))['regular_user']:
+        abort(404)
+    else:
+        # read requests
+        type = default_value(request.args.get('type'), 'all')
+        page = default_value(request.args.get('page'), 1)
+        size = default_value(request.args.get('size'), 5)
+
+        built_url = api_urls('get_v1_private_get_troubles') + "?type=" + type + "&page=" + str(page) + "&size=" + str(size)
+
+        response = requests.get(
+            built_url,
+            headers=generate_authorization_header()
+        )
+        if response.status_code == 200:
+            data = response.json()
+
+            return render_template(
+                "reports.html", 
+                data=data,
+                type=type,
+                page=page,
+                size=size,
+                reports=enumerate(data['internet_troubles'])
+            )
+        else:
+            return render_template("500.html", message="Error on fetching data")

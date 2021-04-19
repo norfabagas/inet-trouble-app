@@ -9,6 +9,7 @@ def api_urls(key: str) -> str:
     users = "/users"
     login = "/login"
     internet_troubles = "/internet_troubles"
+    get_troubles = "/get_troubles"
 
     # combined urls
     v1_private = base_url + api + v1 + private
@@ -24,5 +25,7 @@ def api_urls(key: str) -> str:
         return v1_public + internet_troubles
     elif key == "post_v1_private_internet_troubles":
         return v1_private + internet_troubles
+    elif key == "get_v1_private_get_troubles":
+        return v1_private + get_troubles
     else:
         return ""

@@ -30,7 +30,11 @@
                 <ul class="navbar-nav ml-auto">
                     {% if request.cookies.get("auth") %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/profile">Hi, {{ session.get(request.cookies.get('auth'))['first_name'] }}</a>
+                        {% if session.get(request.cookies.get('auth'))['regular_user'] %}
+                            <a class="nav-link" href="{{ url_for('profile_view') }}">Hi, {{ session.get(request.cookies.get('auth'))['first_name'] }}</a>
+                        {% else %}
+                            <a class="nav-link" href="{{ url_for('reports_view') }}">See Reports</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link">|</a>
