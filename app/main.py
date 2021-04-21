@@ -108,9 +108,14 @@ def login_view():
                 data['token']
             )
 
-            resp = make_response(
-                redirect(url_for("profile_view"))
-            )
+            if data['regular_user']:
+                resp = make_response(
+                    redirect(url_for("profile_view"))
+                )
+            else:
+                resp = make_response(
+                    redirect(url_for("reports_view"))
+                )
 
             resp.set_cookie("auth", data['token'])
 
@@ -273,3 +278,28 @@ def reports_view():
             )
         else:
             return render_template("500.html", message="Error on fetching data")
+
+@app.route('/report/<int:id>', methods=['GET', 'POST'])
+def report_edit_view(id):
+    if request.method == 'GET':
+        response = requests.get(api_urls("get_v1_private_show_trouble") + "/" + str(id), headers=generate_authorization_header())
+        if response.status_code == 200:
+            data = response.json()
+            return render_template('edit.html', id=id, data=data)
+        else:
+            return render_template("500.html", message="Not Found")
+    elif request.method == 'POST':
+        id = request.form['id']
+        body = {
+            "trouble": request.form['trouble'],
+            "category": request.form['category'],
+            "status": request.form['status']
+        }
+        response = requests.put(api_urls('put_v1_private_internet_troubles') + "/" + str(id) + "/edit", headers=generate_authorization_header(), json=body)
+        if response.status_code == 200:
+            flash("Report updated", "success")
+            return redirect(url_for("reports_view"))
+        else:
+            return render_template("500.html", message='Bad Request')
+    else:
+        return render_template('500.html', message='Forbidden')

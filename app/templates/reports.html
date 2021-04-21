@@ -79,7 +79,12 @@ Profile
   {% for key, val in reports %}
   <tr>
     <td>{{ key + 1 }}</td>
-    <td>{{ val['id'] }}</td>
+    <td>
+      {{ val['id'] }}
+      <a href="{{ url_for('report_edit_view', id=val['id']) }}" class="btn btn-secondary btn-sm">
+        edit
+      </a>
+    </td>
     <td>{{ val['trouble'] }}</td>
     <td>{{ val['status'] }}</td>
     <td>{{ val['category'] }}</td>

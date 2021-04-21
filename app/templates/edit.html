@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<h3>
+  <span class="badge badge-secondary">Edit</span>
+  Internet Trouble Report
+</h3>
+<hr>
+
+<form class="form" method="POST" action="{{ url_for('report_edit_view', id=id) }}">
+
+  <input type="hidden" name="id" value="{{ id }}"/>
+
+  <div class="form-group">
+    <label for="trouble">Trouble</label>
+    <input type="text" name="trouble" class="form-control" value="{{ data['internet_trouble']['trouble'] }}" readonly />
+  </div>
+  
+  <div class="form-group">
+    <label for="status">Status</label>
+    <select name="status" class="form-control">
+      <option value="PENDING" {{ 'selected' if data['internet_trouble']['status'] == 'PENDING' else '' }}>PENDING</option>
+      <option value="ON_PROGRESS" {{ 'selected' if data['internet_trouble']['status'] == 'ON_PROGRESS' else '' }}>ON_PROGRESS</option>
+      <option value="DONE" {{ 'selected' if data['internet_trouble']['status'] == 'DONE' else '' }}>DONE</option>
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label for="category">Category {{ '(predicted from ML)' if data['internet_trouble']['is_predicted'] else '' }}</label>
+    <select name="category" class="form-control">
+      <option value="INTERNET" {{ 'selected' if data['internet_trouble']['category']=='INTERNET' else '' }}>INTERNET</option>
+      <option value="NN" {{ 'selected' if data['internet_trouble']['category']=='NN' else '' }}>NN</option>
+      <option value="IPTV" {{ 'selected' if data['internet_trouble']['category']=='IPTV' else '' }}>IPTV</option>
+      <option value="VOICE" {{ 'selected' if data['internet_trouble']['category']=='VOICE' else '' }}>VOICE</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary" value="Update">
+  </div>
+
+</form>
+{% endblock %}
