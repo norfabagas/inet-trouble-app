@@ -5,7 +5,7 @@ import os, requests, json, jwt
 from .middleware import Middleware
 from app.modules.token import generate_authorization_header
 from app.modules.session import generate_auth_session, is_session_valid
-from app.modules.helper import is_duplicate, get_current_unix_time, hour_to_second, get_request_header, dict_contains_null, transform_error_message, default_value
+from app.modules.helper import is_duplicate, get_current_unix_time, hour_to_second, get_request_header, dict_contains_null, transform_error_message, default_value, min_char
 from app.modules.api_urls import api_urls
 from app.modules.ml_api_urls import ml_api_urls
 
@@ -231,6 +231,10 @@ def add_view():
             flash("Please fill out all field", "danger")
             return render_template("add.html")
 
+        if not(min_char(body['trouble'], 6)):
+            flash("Min 6 chars for input", "danger")
+            return render_template("add.html")
+
         ml_resp = requests.get(ml_api_urls("get_classify") + "?text=" + body['trouble'], headers=get_request_header())
         
         if ml_resp.status_code == 200:
@@ -243,7 +247,8 @@ def add_view():
             response = requests.post(api_urls("post_v1_private_internet_troubles"), headers=generate_authorization_header(), json=body)
             if response.status_code == 201:
                 flash("Created new report with category : " + category, "success")
-                return redirect(url_for('profile_view'))
+                # return redirect(url_for('add_view'))
+                return render_template('add.html', result=ml_resp.json())
             else:
                 return render_template("500.html", message="Error on storing data to API")
         else:

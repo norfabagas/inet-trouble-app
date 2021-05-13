@@ -9,6 +9,85 @@ Profile
 {% endblock %}
 
 {% block content %}
+
+{% if result %}
+<div id="accordion">
+  <div class="card">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#collapseOne">
+        Prediction
+      </a>
+    </div>
+    <div id="collapseOne" class="collapse show" data-parent="#accordion">
+      <div class="card-body">
+        <table class="table table-hover table-striped">
+          <tr>
+            <td>INTERNET</td>
+            <td class="{{'font-weight-bold' if result['prediction'] == 'INTERNET' else ''}}">{{ result['result']['INTERNET'] * 100 }}%</td>
+          </tr>
+          <tr>
+            <td>IPTV</td>
+            <td class="{{'font-weight-bold' if result['prediction'] == 'IPTV' else ''}}">{{ result['result']['IPTV'] * 100 }}%</td>
+          </tr>
+          <tr>
+            <td>Voice</td>
+            <td class="{{'font-weight-bold' if result['prediction'] == 'VOICE' else ''}}">{{ result['result']['VOICE'] * 100 }}%</td>
+          </tr>
+          <tr>
+            <td>NN</td>
+            <td class="{{'font-weight-bold' if result['prediction'] == 'NN' else ''}}">{{ result['result']['NN'] * 100 }}%</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+        Data Preprocessing
+      </a>
+    </div>
+    <div id="collapseTwo" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <table class="table table-hover table-striped">
+          <tr>
+            <td>Raw Text</td>
+            <td>{{ result['text']['default'] }}</td>
+          </tr>
+          <tr>
+            <td>Factory punctuated</td>
+            <td>{{ result['text']['factory_punctuated'] }}</td>
+          </tr>
+          <tr>
+            <td>Stopwords lowerized</td>
+            <td>{{ result['text']['stopwords_lowerized'] }}</td>
+          </tr>
+          <tr>
+            <td>Tokenized</td>
+            <td>{{ result['text']['tokenized'] }}</td>
+          </tr>
+          <tr>
+            <td>Padded</td>
+            <td>{{ result['text']['tokenized_padded'] }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+        Stored Tokenizer
+      </a>
+    </div>
+    <div id="collapseThree" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        {{ result['tokenizer'] }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 <h3>
   <span class="badge badge-secondary">New</span>
   Internet Trouble Report

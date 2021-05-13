@@ -37,3 +37,9 @@ def default_value(val, default):
         return default
     else:
         return val
+
+def min_char(val: str, min: int) -> bool:
+    if val and len(val) >= min:
+        return True
+    else:
+        return False
