@@ -37,7 +37,7 @@ Profile
     <label for="category">Category {{ '(predicted from ML)' if data['internet_trouble']['is_predicted'] else '' }}</label>
     <select name="category" class="form-control">
       <option value="INTERNET" {{ 'selected' if data['internet_trouble']['category']=='INTERNET' else '' }}>INTERNET</option>
-      <option value="NN" {{ 'selected' if data['internet_trouble']['category']=='NN' else '' }}>NN</option>
+      <option value="NN" {{ 'selected' if data['internet_trouble']['category']=='NN' else '' }}>Other (NN)</option>
       <option value="IPTV" {{ 'selected' if data['internet_trouble']['category']=='IPTV' else '' }}>IPTV</option>
       <option value="VOICE" {{ 'selected' if data['internet_trouble']['category']=='VOICE' else '' }}>VOICE</option>
     </select>
