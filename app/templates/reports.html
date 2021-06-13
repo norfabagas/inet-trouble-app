@@ -87,7 +87,7 @@ Profile
     </td>
     <td>{{ val['trouble'] }}</td>
     <td>{{ val['status'] }}</td>
-    <td>{{ val['category'] }}</td>
+    <td>{{ 'Other (NN)' if val['category'] == 'NN' else val['category'] }}</td>
     <td>{{ val['is_predicted'] }}</td>
   </tr>
   {% endfor %}
