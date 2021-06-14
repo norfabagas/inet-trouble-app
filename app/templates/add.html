@@ -100,21 +100,12 @@ Profile
     <label>Select from suggestions</label>
     <br />
     <h3>
-      <span class="btn btn-secondary badge badge-secondary" onclick="fillForm('Tidak bisa browsing', 'trouble');">
-        Tidak bisa browsing
-      </span>
-      
-      <span class="btn btn-secondary badge badge-secondary" onclick="fillForm('Live TV tidak muncul', 'trouble');">
-        Live TV tidak muncul
-      </span>
-      
-      <span class="btn btn-secondary badge badge-secondary" onclick="fillForm('Browsing lambat', 'trouble');">
-        Browsing lambat
-      </span>
-      
-      <span class="btn btn-secondary badge badge-secondary" onclick="fillForm('Jaringan tidak Bisa Diukur Telepon mati', 'trouble');">
-        Jaringan tidak Bisa Diukur Telepon mati
-      </span>
+
+      {% for val in suggestions %}
+        <span class="btn btn-secondary badge badge-secondary mr-2 mb-2" onclick="fillForm('{{ val }}', 'trouble');">
+          {{ val }}
+        </span>
+      {% endfor %}
     </h3>
   </div>
 
