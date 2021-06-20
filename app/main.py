@@ -323,3 +323,22 @@ def report_edit_view(id):
             return render_template("500.html", message='Bad Request')
     else:
         return render_template('500.html', message='Forbidden')
+
+@app.route('/suggestions', methods=['GET'])
+def suggestions_view():
+    suggestions = [
+            'Tidak bisa browsing',
+            'Live TV tidak muncul',
+            'Browsing lambat',
+            'Jaringan tidak Bisa Diukur Telepon mati',
+            'Kabel Terjuntai Mengganggu Jalan Raya',
+            'Tiang Keropos Mohon Diganti',
+            'Tiang Miring Rawan Roboh',
+            'Mohon Pemindahan Tiang Karena Menghalangi Pembangunan Rumah',
+            'Kabel Putus Terkena Rabas Pohon',
+            'Kabel Putus Terkena Backhoe',
+            'Internet Lambat',
+            'Wifi Putus Putus'
+        ]
+    
+    return jsonify(suggestions)
