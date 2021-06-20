@@ -221,22 +221,8 @@ def profile_view():
 @app.route("/add", methods=['GET', 'POST'])
 def add_view():
     if request.method == 'GET':
-        suggestions = [
-            'Tidak bisa browsing',
-            'Live TV tidak muncul',
-            'Browsing lambat',
-            'Jaringan tidak Bisa Diukur Telepon mati',
-            'Kabel Terjuntai Mengganggu Jalan Raya',
-            'Tiang Keropos Mohon Diganti',
-            'Tiang Miring Rawan Roboh',
-            'Mohon Pemindahan Tiang Karena Menghalangi Pembangunan Rumah',
-            'Kabel Putus Terkena Rabas Pohon',
-            'Kabel Putus Terkena Backhoe',
-            'Internet Lambat',
-            'Wifi Putus Putus'
-        ]
 
-        return render_template("add.html", suggestions=suggestions)
+        return render_template("add.html")
     else:
         body = {
             'trouble': request.form['trouble']

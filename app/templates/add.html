@@ -97,21 +97,6 @@ Profile
 <form class="form" method="POST" action="{{ url_for('add_view') }}">
 
   <div class="form-group">
-    <label>Select from suggestions</label>
-    <br />
-    <h3>
-
-      {% for val in suggestions %}
-        <span class="btn btn-secondary badge badge-secondary mr-2 mb-2" onclick="fillForm('{{ val }}', 'trouble');">
-          {{ val }}
-        </span>
-      {% endfor %}
-    </h3>
-  </div>
-
-  <hr />
-
-  <div class="form-group">
     <label for="trouble">Trouble</label>
     <input type="text" name="trouble" id="trouble" class="form-control" value="{{ trouble }}" />
   </div>
